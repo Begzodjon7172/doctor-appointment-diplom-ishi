@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "819974843600",
+    "firebase_url": "https://doctor-appointment-94937-default-rtdb.firebaseio.com",
+    "project_id": "doctor-appointment-94937",
+    "storage_bucket": "doctor-appointment-94937.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819974843600:android:dac6322765ca921bf8c2d5",
+        "android_client_info": {
+          "package_name": "uz.bnabiyev.doctor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "819974843600-8jhq29t1amm9hrap7n2cid3ql3ltcu94.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "uz.bnabiyev.doctor",
+            "certificate_hash": "7407599542cf68cb7715bb9ab69872110453f2cd"
+          }
+        },
+        {
+          "client_id": "819974843600-6140fajovi7acbftom5n2mrici2kit6a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeyPQJozneaNbxg8TJneNxNCEhREEJS7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "819974843600-6140fajovi7acbftom5n2mrici2kit6a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819974843600:android:2114eeb4d699d42af8c2d5",
+        "android_client_info": {
+          "package_name": "uz.bnabiyev.drappointment"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "819974843600-6140fajovi7acbftom5n2mrici2kit6a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeyPQJozneaNbxg8TJneNxNCEhREEJS7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "819974843600-6140fajovi7acbftom5n2mrici2kit6a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
