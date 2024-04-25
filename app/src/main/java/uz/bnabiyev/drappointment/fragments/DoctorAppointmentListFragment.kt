@@ -70,21 +70,21 @@ class DoctorAppointmentListFragment : Fragment() {
 
             val alertDialog = builder.create()
             alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            alertDialog.show()
-
-            customAlertDialogBinding.endBtn.setOnClickListener {
-
-                FirebaseDatabase.getInstance().getReference("appointments").child(userRoom!!)
-                    .removeValue().addOnSuccessListener {
-                        FirebaseDatabase.getInstance().getReference("appointments")
-                            .child(doctorRoom!!)
-                            .removeValue()
-                        alertDialog.dismiss()
-                        bookingAdapter.notifyDataSetChanged()
-                    }
-                FirebaseDatabase.getInstance().reference.child(FirebaseAuth.getInstance().currentUser?.uid!!)
-                    .child(param1?.uid!!).removeValue()
-            }
+//            alertDialog.show()
+//
+//            customAlertDialogBinding.endBtn.setOnClickListener {
+//
+//                FirebaseDatabase.getInstance().getReference("appointments").child(userRoom!!)
+//                    .removeValue().addOnSuccessListener {
+//                        FirebaseDatabase.getInstance().getReference("appointments")
+//                            .child(doctorRoom!!)
+//                            .removeValue()
+//                        alertDialog.dismiss()
+//                        bookingAdapter.notifyDataSetChanged()
+//                    }
+//                FirebaseDatabase.getInstance().reference.child(FirebaseAuth.getInstance().currentUser?.uid!!)
+//                    .child(param1?.uid!!).removeValue()
+//            }
         }
         binding.rv.adapter = bookingAdapter
 

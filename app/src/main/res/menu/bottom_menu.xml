@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/homeFragment"
-        android:icon="@drawable/baseline_add_home_24"
-        android:title="Home" />
+        android:id="@+id/information"
+        app:showAsAction="always"
+        android:icon="@drawable/request"
+        android:title="Informatsiya" />
     <item
-        android:id="@+id/messageFragment"
-        android:icon="@drawable/baseline_announcement_24"
-        android:title="Message" />
-    <item
-        android:id="@+id/settingsFragment"
-        android:icon="@drawable/baseline_app_settings_alt_24"
-        android:title="Settings" />
+        android:id="@+id/logOut"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/logout"
+        android:title="Chiqish" />
+
 </menu>
