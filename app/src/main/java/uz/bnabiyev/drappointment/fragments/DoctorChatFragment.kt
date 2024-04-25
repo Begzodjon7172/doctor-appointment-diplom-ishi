@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -55,6 +56,7 @@ class DoctorChatFragment : Fragment() {
         messageList = ArrayList()
         messageAdapter = MessageAdapter(requireContext(), messageList)
         binding.rv.adapter = messageAdapter
+        binding.rv.scrollToPosition(messageList.size - 1)
 
         reference.child("chats").child(senderRoom!!).child("messages")
             .addValueEventListener(object : ValueEventListener {
@@ -65,6 +67,7 @@ class DoctorChatFragment : Fragment() {
                         messageList.add(message!!)
                     }
                     messageAdapter.notifyDataSetChanged()
+                    binding.rv.scrollToPosition(messageList.size - 1)
                 }
 
                 override fun onCancelled(error: DatabaseError) {

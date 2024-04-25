@@ -8,7 +8,6 @@
         android:title="Informatsiya" />
     <item
         android:id="@+id/logOut"
-        app:showAsAction="ifRoom"
         android:icon="@drawable/logout"
         android:title="Chiqish" />
 
