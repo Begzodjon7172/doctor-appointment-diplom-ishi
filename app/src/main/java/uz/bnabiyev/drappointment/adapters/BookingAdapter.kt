@@ -6,16 +6,23 @@ import androidx.recyclerview.widget.RecyclerView
 import uz.bnabiyev.drappointment.R
 import uz.bnabiyev.drappointment.databinding.ItemBookingBinding
 import uz.bnabiyev.drappointment.models.Booking
+import uz.bnabiyev.drappointment.models.Category
 
-class BookingAdapter(private val bookingList: ArrayList<Booking>) :
+class BookingAdapter(
+    private val bookingList: ArrayList<Booking>,
+    private val itemClick: (Booking) -> Unit
+) :
     RecyclerView.Adapter<BookingAdapter.Vh>() {
 
     inner class Vh(private val itemBookingBinding: ItemBookingBinding) :
         RecyclerView.ViewHolder(itemBookingBinding.root) {
         fun onBind(booking: Booking) {
-            itemBookingBinding.image.setImageResource(R.drawable.img_2)
+            itemBookingBinding.image.setImageResource(R.drawable.img)
             itemBookingBinding.tvName.text = "Dr : ${booking.doctorName}"
             itemBookingBinding.tvDate.text = "Date : ${booking.date} ${booking.time}"
+            itemView.setOnClickListener {
+                itemClick.invoke(booking)
+            }
         }
     }
 

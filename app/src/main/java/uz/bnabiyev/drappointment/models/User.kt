@@ -1,6 +1,8 @@
 package uz.bnabiyev.drappointment.models
 
-class User {
+import java.io.Serializable
+
+class User :Serializable{
     var firstName: String? = null
     var lastName: String? = null
     var email: String? = null

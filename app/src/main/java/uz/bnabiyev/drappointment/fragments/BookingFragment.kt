@@ -58,7 +58,7 @@ class BookingFragment : Fragment() {
 
         val doctorUid = param1?.uid
         val userUid = FirebaseAuth.getInstance().currentUser?.uid
-//        loadTimes()
+        loadTimes()
         timeAdapter = TimeAdapter(timeList) { time ->
 
         }
@@ -120,6 +120,12 @@ class BookingFragment : Fragment() {
                     Toast.makeText(requireContext(), "Saqlandi!!!", Toast.LENGTH_SHORT).show()
                 }
 
+            FirebaseDatabase.getInstance().reference.child(param1?.uid!!).push()
+                .setValue(userUid).addOnSuccessListener {
+                    Toast.makeText(requireContext(), "emailgayam saqlandi", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
         }
 
         return binding.root
@@ -139,24 +145,24 @@ class BookingFragment : Fragment() {
 //            })
 //    }
 
-//    private fun loadTimes() {
-//        timeList = ArrayList()
-//        timeList.add("09:00")
-//        timeList.add("09:30")
-//        timeList.add("10:00")
-//        timeList.add("10:30")
-//        timeList.add("11:00")
-//        timeList.add("11:30")
-//        timeList.add("12:00")
-//        timeList.add("13:00")
-//        timeList.add("13:30")
-//        timeList.add("14:00")
-//        timeList.add("14:30")
-//        timeList.add("15:00")
-//        timeList.add("15:30")
-//        timeList.add("16:00")
-//        timeList.add("16:30")
-//    }
+    private fun loadTimes() {
+        timeList = ArrayList()
+        timeList.add("09:00")
+        timeList.add("09:30")
+        timeList.add("10:00")
+        timeList.add("10:30")
+        timeList.add("11:00")
+        timeList.add("11:30")
+        timeList.add("12:00")
+        timeList.add("13:00")
+        timeList.add("13:30")
+        timeList.add("14:00")
+        timeList.add("14:30")
+        timeList.add("15:00")
+        timeList.add("15:30")
+        timeList.add("16:00")
+        timeList.add("16:30")
+    }
 
     fun getDate() {
         val date = binding.calendarView.date
