@@ -17,8 +17,8 @@ class BookingAdapter(
     inner class Vh(private val itemBookingBinding: ItemBookingBinding) :
         RecyclerView.ViewHolder(itemBookingBinding.root) {
         fun onBind(booking: Booking) {
-            itemBookingBinding.image.setImageResource(R.drawable.img)
-            itemBookingBinding.tvName.text = "Dr : ${booking.doctorName}"
+            itemBookingBinding.image.setImageResource(R.drawable.img_2)
+            itemBookingBinding.tvName.text = "Dr : ${booking.userName}"
             itemBookingBinding.tvDate.text = "Date : ${booking.date} ${booking.time}"
             itemView.setOnClickListener {
                 itemClick.invoke(booking)
