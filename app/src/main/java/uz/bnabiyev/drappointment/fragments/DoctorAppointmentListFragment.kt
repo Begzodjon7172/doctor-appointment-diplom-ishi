@@ -60,9 +60,8 @@ class DoctorAppointmentListFragment : Fragment() {
         doctorRoom = userUid + doctorUid
 
         list = ArrayList()
-        reference = FirebaseDatabase.getInstance().getReference("appointments").child(userRoom!!)
-            .child("messages")
-        bookingAdapter = BookingAdapter(list) {
+        reference = FirebaseDatabase.getInstance().reference
+        bookingAdapter = BookingAdapter(list) { booking ->
             val builder = AlertDialog.Builder(requireContext())
             val customAlertDialogBinding = CustomAlertDialogBinding.inflate(layoutInflater)
 
@@ -70,41 +69,83 @@ class DoctorAppointmentListFragment : Fragment() {
 
             val alertDialog = builder.create()
             alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//            alertDialog.show()
-//
-//            customAlertDialogBinding.endBtn.setOnClickListener {
-//
-//                FirebaseDatabase.getInstance().getReference("appointments").child(userRoom!!)
-//                    .removeValue().addOnSuccessListener {
-//                        FirebaseDatabase.getInstance().getReference("appointments")
-//                            .child(doctorRoom!!)
-//                            .removeValue()
-//                        alertDialog.dismiss()
-//                        bookingAdapter.notifyDataSetChanged()
-//                    }
+            alertDialog.show()
+
+            customAlertDialogBinding.endBtn.setOnClickListener {
+
+//                reference.removeValue().addOnSuccessListener {
+//                    FirebaseDatabase.getInstance().getReference("appointments")
+//                        .child(doctorRoom!!)
+//                        .removeValue()
+//                    alertDialog.dismiss()
+//                    bookingAdapter.notifyDataSetChanged()
+//                }
 //                FirebaseDatabase.getInstance().reference.child(FirebaseAuth.getInstance().currentUser?.uid!!)
 //                    .child(param1?.uid!!).removeValue()
-//            }
+
+                reference.child("appointments").child(userRoom!!).child("messages")
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            list.clear()
+                            for (i in snapshot.children) {
+                                val booking1 = i.getValue(Booking::class.java)
+                                if (booking1?.date != booking.date && booking1?.time != booking.time) {
+                                    list.add(booking1!!)
+                                } else {
+                                    reference.child("appointments").child(userRoom!!)
+                                        .child("messages").child(i.key!!).removeValue()
+                                }
+                            }
+                            bookingAdapter.notifyDataSetChanged()
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+
+                        }
+                    })
+
+                reference.child("appointments").child(doctorRoom!!).child("messages")
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (i in snapshot.children) {
+                                val booking1 = i.getValue(Booking::class.java)
+                                if (booking1?.date == booking.date && booking1?.time == booking.time) {
+                                    reference.child("appointments").child(doctorRoom!!)
+                                        .child("messages").child(i.key!!).removeValue()
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+
+                        }
+                    })
+
+                alertDialog.dismiss()
+
+
+            }
         }
         binding.rv.adapter = bookingAdapter
 
 
-        reference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                list.clear()
-                for (i in snapshot.children) {
-                    val booking = i.getValue(Booking::class.java)
-                    if (booking != null) {
-                        list.add(booking)
+        reference.child("appointments").child(userRoom!!).child("messages")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    list.clear()
+                    for (i in snapshot.children) {
+                        val booking = i.getValue(Booking::class.java)
+                        if (booking != null) {
+                            list.add(booking)
+                        }
                     }
+                    bookingAdapter.notifyDataSetChanged()
                 }
-                bookingAdapter.notifyDataSetChanged()
-            }
 
-            override fun onCancelled(error: DatabaseError) {
+                override fun onCancelled(error: DatabaseError) {
 
-            }
-        })
+                }
+            })
 
         return binding.root
     }

@@ -18,8 +18,8 @@ class BookingAdapter(
         RecyclerView.ViewHolder(itemBookingBinding.root) {
         fun onBind(booking: Booking) {
             itemBookingBinding.image.setImageResource(R.drawable.img_2)
-            itemBookingBinding.tvName.text = "Dr : ${booking.userName}"
-            itemBookingBinding.tvDate.text = "Date : ${booking.date} ${booking.time}"
+            itemBookingBinding.tvName.text = "Mijoz : ${booking.userName}"
+            itemBookingBinding.tvDate.text = "Kuni va vaqti : ${booking.date}, ${booking.time}"
             itemView.setOnClickListener {
                 itemClick.invoke(booking)
             }

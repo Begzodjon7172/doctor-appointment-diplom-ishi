@@ -6,7 +6,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#777FD6"
     android:padding="20dp"
+    android:orientation="vertical"
     tools:context=".fragments.DoctorAppointmentListFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mijozning band qilgan kun va vaqtlar ro'yxati:"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="italic|bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"

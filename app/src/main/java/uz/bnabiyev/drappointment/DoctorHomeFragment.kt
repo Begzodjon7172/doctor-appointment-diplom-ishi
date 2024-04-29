@@ -19,7 +19,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import uz.bnabiyev.drappointment.adapters.UserAdapter
-import uz.bnabiyev.drappointment.databinding.DoctorDialogBinding
 import uz.bnabiyev.drappointment.databinding.FragmentDoctorHomeBinding
 import uz.bnabiyev.drappointment.databinding.UserDialogBinding
 import uz.bnabiyev.drappointment.models.User
@@ -28,7 +27,7 @@ class DoctorHomeFragment : Fragment() {
 
     private val binding by lazy { FragmentDoctorHomeBinding.inflate(layoutInflater) }
     private lateinit var reference: DatabaseReference
-    private lateinit var userUidList: ArrayList<String>
+    private lateinit var userUidList: HashSet<String>
     private lateinit var registeredUserList: ArrayList<User>
     private lateinit var userAdapter: UserAdapter
     private lateinit var auth: FirebaseAuth
@@ -116,8 +115,8 @@ class DoctorHomeFragment : Fragment() {
                 registeredUserList.clear()
                 for (i in snapshot.children) {
                     val user = i.getValue(User::class.java)
-                    for (j in 0..<userUidList.size) {
-                        if (user?.uid == userUidList[j]) {
+                    userUidList.forEach {
+                        if (user?.uid == it) {
                             registeredUserList.add(user)
                         }
                     }
@@ -132,7 +131,7 @@ class DoctorHomeFragment : Fragment() {
     }
 
     private fun getUsersUid() {
-        userUidList = ArrayList()
+        userUidList = HashSet()
         reference.child(auth.currentUser?.uid!!).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 userUidList.clear()
