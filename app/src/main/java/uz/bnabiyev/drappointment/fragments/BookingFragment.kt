@@ -1,11 +1,12 @@
 package uz.bnabiyev.drappointment.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
@@ -15,15 +16,17 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import uz.bnabiyev.drappointment.R
-import uz.bnabiyev.drappointment.adapters.TimeAdapter
 import uz.bnabiyev.drappointment.databinding.FragmentBookingBinding
 import uz.bnabiyev.drappointment.models.Booking
 import uz.bnabiyev.drappointment.models.Doctor
 import uz.bnabiyev.drappointment.models.User
+import uz.bnabiyev.drappointment.utils.TimeGenerator
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
 private const val ARG_PARAM1 = "doctor"
+
+private const val TAG = "BookingFragment"
 
 class BookingFragment : Fragment() {
 
@@ -38,11 +41,11 @@ class BookingFragment : Fragment() {
 
     private val binding by lazy { FragmentBookingBinding.inflate(layoutInflater) }
     private lateinit var calendar: Calendar
-    private lateinit var timeAdapter: TimeAdapter
     private lateinit var timeList: ArrayList<String>
     private lateinit var auth: FirebaseAuth
     private lateinit var reference: DatabaseReference
     private lateinit var mUser: User
+    private lateinit var arrayAdapter: ArrayAdapter<String>
     var doctorRoom: String? = null
     var userRoom: String? = null
     private var date1 = ""
@@ -58,13 +61,20 @@ class BookingFragment : Fragment() {
 
         val doctorUid = param1?.uid
         val userUid = FirebaseAuth.getInstance().currentUser?.uid
-        loadTimes()
-        timeAdapter = TimeAdapter(timeList) { time ->
+        val c = Calendar.getInstance()
+        val day = c.get(Calendar.DAY_OF_MONTH)
+        val month = c.get(Calendar.MONTH) + 1
+        val year = c.get(Calendar.YEAR)
 
-        }
-//        binding.rv.adapter = timeAdapter
+        val selectedDate = "$day/$month/$year"
+        Log.d(TAG, "onCreateView: kun: $selectedDate")
 
-        getDate()
+        getDate(selectedDate)
+
+        arrayAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, timeList)
+        binding.spinner.adapter = arrayAdapter
+
+
         reference.child("Users").child(userUid!!)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -78,9 +88,8 @@ class BookingFragment : Fragment() {
             })
 
         binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            Toast.makeText(requireContext(), "$year/${month + 1}/$dayOfMonth", Toast.LENGTH_SHORT)
-                .show()
             date1 = "$dayOfMonth/${month + 1}/$year"
+            getDate(date1)
         }
 
         binding.listBtn.setOnClickListener {
@@ -120,6 +129,9 @@ class BookingFragment : Fragment() {
                     Toast.makeText(requireContext(), "Saqlandi!!!", Toast.LENGTH_SHORT).show()
                 }
 
+            reference.child(doctorUid!!).child("dataAndTime").push()
+                .setValue(booking)
+
             FirebaseDatabase.getInstance().reference.child(param1?.uid!!).push()
                 .setValue(userUid).addOnSuccessListener {
                     Toast.makeText(requireContext(), "emailgayam saqlandi", Toast.LENGTH_SHORT)
@@ -145,32 +157,29 @@ class BookingFragment : Fragment() {
 //            })
 //    }
 
-    private fun loadTimes() {
-        timeList = ArrayList()
-        timeList.add("09:00")
-        timeList.add("09:30")
-        timeList.add("10:00")
-        timeList.add("10:30")
-        timeList.add("11:00")
-        timeList.add("11:30")
-        timeList.add("12:00")
-        timeList.add("13:00")
-        timeList.add("13:30")
-        timeList.add("14:00")
-        timeList.add("14:30")
-        timeList.add("15:00")
-        timeList.add("15:30")
-        timeList.add("16:00")
-        timeList.add("16:30")
-    }
+    fun getDate(dateAndTime: String) {
 
-    fun getDate() {
-        val date = binding.calendarView.date
-        var simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
-        calendar.timeInMillis = date
-        var selectedDate = simpleDateFormat.format(calendar.time)
-        Toast.makeText(requireContext(), selectedDate, Toast.LENGTH_SHORT).show()
-        date1 = selectedDate
+        timeList = TimeGenerator.generateTimes()
+
+        reference.child(param1?.uid!!).child("dataAndTime")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (i in snapshot.children) {
+                        val booking1 = i.getValue(Booking::class.java)
+                        if (booking1?.date == dateAndTime) {
+                            Log.d(TAG, "onDataChange: remove date : ${booking1.time}")
+                            timeList.remove(booking1.time)
+                        }
+                    }
+                    arrayAdapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+            })
+        Toast.makeText(requireContext(), dateAndTime, Toast.LENGTH_SHORT).show()
+        date1 = dateAndTime
     }
 
 //    fun setDate(day: Int, month: Int, year: Int) {
