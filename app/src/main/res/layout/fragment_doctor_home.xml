@@ -7,7 +7,7 @@
     android:background="#777FD6"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context=".DoctorHomeFragment">
+    tools:context=".fragments.DoctorHomeFragment">
 
     <TextView
         android:layout_width="match_parent"

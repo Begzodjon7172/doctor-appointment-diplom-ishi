@@ -16,7 +16,7 @@ class DoctorsAdapter(
         RecyclerView.ViewHolder(itemDoctorsBinding.root) {
         fun onBind(doctor: Doctor) {
             itemDoctorsBinding.image.setImageResource(R.drawable.img_1)
-            itemDoctorsBinding.tvName.text = doctor.firstName
+            itemDoctorsBinding.tvName.text = "Doctor : ${doctor.firstName}"
             itemDoctorsBinding.tvNumber.text = "Call : ${doctor.phoneNumber}"
             itemView.setOnClickListener {
                 itemClick.invoke(doctor)

@@ -87,6 +87,17 @@
                         android:foreground="?selectableItemBackground"
                         android:src="@drawable/calendar" />
 
+                    <ImageView
+                        android:id="@+id/deleteBtn"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?selectableItemBackground"
+                        android:src="@drawable/baseline_auto_delete_24" />
+
+
                 </LinearLayout>
 
             </RelativeLayout>

@@ -16,7 +16,7 @@ class UserAdapter(
         RecyclerView.ViewHolder(itemUsersBinding.root) {
         fun onBind(user: User) {
             itemUsersBinding.image.setImageResource(R.drawable.img_2)
-            itemUsersBinding.tvName.text = user.firstName
+            itemUsersBinding.tvName.text = "Mijoz : ${user.firstName}"
             itemUsersBinding.tvNumber.text = "Call : ${user.phoneNumber}"
             itemView.setOnClickListener {
                 itemClick.invoke(user)
