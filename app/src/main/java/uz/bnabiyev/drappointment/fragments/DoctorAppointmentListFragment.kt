@@ -73,23 +73,13 @@ class DoctorAppointmentListFragment : Fragment() {
 
             customAlertDialogBinding.endBtn.setOnClickListener {
 
-//                reference.removeValue().addOnSuccessListener {
-//                    FirebaseDatabase.getInstance().getReference("appointments")
-//                        .child(doctorRoom!!)
-//                        .removeValue()
-//                    alertDialog.dismiss()
-//                    bookingAdapter.notifyDataSetChanged()
-//                }
-//                FirebaseDatabase.getInstance().reference.child(FirebaseAuth.getInstance().currentUser?.uid!!)
-//                    .child(param1?.uid!!).removeValue()
-
                 reference.child("appointments").child(userRoom!!).child("messages")
                     .addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             list.clear()
                             for (i in snapshot.children) {
                                 val booking1 = i.getValue(Booking::class.java)
-                                if (booking1?.date != booking.date && booking1?.time != booking.time) {
+                                if ((booking1?.date != booking.date) && (booking1?.time != booking.time)) {
                                     list.add(booking1!!)
                                 } else {
                                     reference.child("appointments").child(userRoom!!)

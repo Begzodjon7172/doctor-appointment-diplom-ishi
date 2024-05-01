@@ -66,10 +66,9 @@ class BookingFragment : Fragment() {
         val month = c.get(Calendar.MONTH) + 1
         val year = c.get(Calendar.YEAR)
 
-        val selectedDate = "$day/$month/$year"
-        Log.d(TAG, "onCreateView: kun: $selectedDate")
+        date1 = "$day/${month + 1}/$year"
 
-        getDate(selectedDate)
+        getDate()
 
         arrayAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, timeList)
         binding.spinner.adapter = arrayAdapter
@@ -89,7 +88,6 @@ class BookingFragment : Fragment() {
 
         binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
             date1 = "$dayOfMonth/${month + 1}/$year"
-            getDate(date1)
         }
 
         binding.listBtn.setOnClickListener {
@@ -129,9 +127,6 @@ class BookingFragment : Fragment() {
                     Toast.makeText(requireContext(), "Saqlandi!!!", Toast.LENGTH_SHORT).show()
                 }
 
-            reference.child(doctorUid!!).child("dataAndTime").push()
-                .setValue(booking)
-
             FirebaseDatabase.getInstance().reference.child(param1?.uid!!).push()
                 .setValue(userUid).addOnSuccessListener {
                     Toast.makeText(requireContext(), "emailgayam saqlandi", Toast.LENGTH_SHORT)
@@ -157,29 +152,8 @@ class BookingFragment : Fragment() {
 //            })
 //    }
 
-    fun getDate(dateAndTime: String) {
-
+    fun getDate() {
         timeList = TimeGenerator.generateTimes()
-
-        reference.child(param1?.uid!!).child("dataAndTime")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for (i in snapshot.children) {
-                        val booking1 = i.getValue(Booking::class.java)
-                        if (booking1?.date == dateAndTime) {
-                            Log.d(TAG, "onDataChange: remove date : ${booking1.time}")
-                            timeList.remove(booking1.time)
-                        }
-                    }
-                    arrayAdapter.notifyDataSetChanged()
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-            })
-        Toast.makeText(requireContext(), dateAndTime, Toast.LENGTH_SHORT).show()
-        date1 = dateAndTime
     }
 
 //    fun setDate(day: Int, month: Int, year: Int) {

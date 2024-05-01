@@ -37,17 +37,17 @@ class HomeFragment : Fragment() {
     private fun loadData() {
         categoryList = ArrayList()
         categoryList.add(Category(R.drawable.img, "ENDOKRINOLOG"))
-        categoryList.add(Category(R.drawable.img, "NEUROPOTOLOG"))
-        categoryList.add(Category(R.drawable.img, "STOMATOLOG"))
-        categoryList.add(Category(R.drawable.img, "JARROH"))
-        categoryList.add(Category(R.drawable.img, "LOR"))
-        categoryList.add(Category(R.drawable.img, "GINEKOLOG"))
-        categoryList.add(Category(R.drawable.img, "PULMONOLOG"))
-        categoryList.add(Category(R.drawable.img, "OKULIST"))
-        categoryList.add(Category(R.drawable.img, "TERAPEVT"))
-        categoryList.add(Category(R.drawable.img, "UROLOG"))
-        categoryList.add(Category(R.drawable.img, "DERMATOLOG"))
-        categoryList.add(Category(R.drawable.img, "KARDIOLOG"))
+        categoryList.add(Category(R.drawable.img_3, "NEUROPOTOLOG"))
+        categoryList.add(Category(R.drawable.img_4, "STOMATOLOG"))
+        categoryList.add(Category(R.drawable.img_5, "JARROH"))
+        categoryList.add(Category(R.drawable.img_6, "LOR"))
+        categoryList.add(Category(R.drawable.img_7, "GINEKOLOG"))
+        categoryList.add(Category(R.drawable.img_8, "PULMONOLOG"))
+        categoryList.add(Category(R.drawable.img_9, "OKULIST"))
+        categoryList.add(Category(R.drawable.img_10, "TERAPEVT"))
+        categoryList.add(Category(R.drawable.img_11, "UROLOG"))
+        categoryList.add(Category(R.drawable.img_12, "DERMATOLOG"))
+        categoryList.add(Category(R.drawable.img_13, "KARDIOLOG"))
     }
 
 }

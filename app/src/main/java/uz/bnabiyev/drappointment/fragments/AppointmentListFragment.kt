@@ -1,11 +1,14 @@
 package uz.bnabiyev.drappointment.fragments
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -15,6 +18,7 @@ import com.google.firebase.database.ValueEventListener
 import uz.bnabiyev.drappointment.R
 import uz.bnabiyev.drappointment.adapters.BookingAdapter
 import uz.bnabiyev.drappointment.adapters.DoctorsAdapter
+import uz.bnabiyev.drappointment.databinding.CustomAlertDialogBinding
 import uz.bnabiyev.drappointment.databinding.FragmentAppointmentListBinding
 import uz.bnabiyev.drappointment.models.Booking
 import uz.bnabiyev.drappointment.models.Doctor
@@ -57,9 +61,62 @@ class AppointmentListFragment : Fragment() {
         list = ArrayList()
         reference = FirebaseDatabase.getInstance().getReference("appointments").child(userRoom!!)
             .child("messages")
-        bookingAdapter = BookingAdapter(list){
 
+        bookingAdapter = BookingAdapter(list) { booking ->
+            val builder = AlertDialog.Builder(requireContext())
+            val customAlertDialogBinding = CustomAlertDialogBinding.inflate(layoutInflater)
+
+            builder.setView(customAlertDialogBinding.root)
+
+            val alertDialog = builder.create()
+            alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            alertDialog.show()
+
+            customAlertDialogBinding.endBtn.setOnClickListener {
+
+                reference.addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            list.clear()
+                            for (i in snapshot.children) {
+                                val booking1 = i.getValue(Booking::class.java)
+                                if ((booking1?.date != booking.date) && (booking1?.time != booking.time)) {
+                                    list.add(booking1!!)
+                                } else {
+                                    reference.child("appointments").child(userRoom!!)
+                                        .child("messages").child(i.key!!).removeValue()
+                                }
+                            }
+                            bookingAdapter.notifyDataSetChanged()
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+
+                        }
+                    })
+
+                FirebaseDatabase.getInstance().reference.child("appointments").child(doctorRoom!!).child("messages")
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (i in snapshot.children) {
+                                val booking1 = i.getValue(Booking::class.java)
+                                if (booking1?.date == booking.date && booking1?.time == booking.time) {
+                                    reference.child("appointments").child(doctorRoom!!)
+                                        .child("messages").child(i.key!!).removeValue()
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+
+                        }
+                    })
+
+                alertDialog.dismiss()
+
+
+            }
         }
+
         binding.rv.adapter = bookingAdapter
 
 
@@ -68,7 +125,6 @@ class AppointmentListFragment : Fragment() {
                 list.clear()
                 for (i in snapshot.children) {
                     val booking = i.getValue(Booking::class.java)
-                    Log.d(TAG, "onDataChange: $booking")
                     if (booking != null) {
                         list.add(booking)
                     }
