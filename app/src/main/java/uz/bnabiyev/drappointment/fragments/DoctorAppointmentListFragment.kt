@@ -51,10 +51,10 @@ class DoctorAppointmentListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val doctor = arguments?.getSerializable("user") as User?
+        val user = arguments?.getSerializable("user") as User?
 
-        val doctorUid = doctor?.uid
-        val userUid = FirebaseAuth.getInstance().currentUser?.uid
+        val userUid = user?.uid
+        val doctorUid = FirebaseAuth.getInstance().currentUser?.uid
 
         userRoom = doctorUid + userUid
         doctorRoom = userUid + doctorUid
@@ -73,17 +73,19 @@ class DoctorAppointmentListFragment : Fragment() {
 
             customAlertDialogBinding.endBtn.setOnClickListener {
 
-                reference.child("appointments").child(userRoom!!).child("messages")
+                reference.child("appointments").child(booking.userUid + booking.doctorUid)
+                    .child("messages")
                     .addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            list.clear()
                             for (i in snapshot.children) {
                                 val booking1 = i.getValue(Booking::class.java)
-                                if ((booking1?.date != booking.date) && (booking1?.time != booking.time)) {
-                                    list.add(booking1!!)
-                                } else {
-                                    reference.child("appointments").child(userRoom!!)
+                                if (booking.date == booking1?.date && booking.time == booking1?.time) {
+                                    reference.child("appointments")
+                                        .child(booking.userUid + booking.doctorUid)
                                         .child("messages").child(i.key!!).removeValue()
+                                        .addOnSuccessListener {
+                                            list.remove(booking1)
+                                        }
                                 }
                             }
                             bookingAdapter.notifyDataSetChanged()
@@ -94,14 +96,16 @@ class DoctorAppointmentListFragment : Fragment() {
                         }
                     })
 
-                reference.child("appointments").child(doctorRoom!!).child("messages")
+                reference.child("appointments").child(booking.doctorUid + booking.userUid)
+                    .child("messages")
                     .addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            for (i in snapshot.children) {
-                                val booking1 = i.getValue(Booking::class.java)
-                                if (booking1?.date == booking.date && booking1?.time == booking.time) {
-                                    reference.child("appointments").child(doctorRoom!!)
-                                        .child("messages").child(i.key!!).removeValue()
+                            for (j in snapshot.children) {
+                                val booking2 = j.getValue(Booking::class.java)
+                                if (booking2?.date == booking.date && booking2?.time == booking.time) {
+                                    reference.child("appointments")
+                                        .child(booking.doctorUid + booking.userUid)
+                                        .child("messages").child(j.key!!).removeValue()
                                 }
                             }
                         }
@@ -111,15 +115,15 @@ class DoctorAppointmentListFragment : Fragment() {
                         }
                     })
 
-                alertDialog.dismiss()
 
+                alertDialog.dismiss()
 
             }
         }
         binding.rv.adapter = bookingAdapter
 
 
-        reference.child("appointments").child(userRoom!!).child("messages")
+        reference.child("appointments").child(doctorRoom!!).child("messages")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     list.clear()
