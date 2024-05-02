@@ -90,7 +90,7 @@ class LoginActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(
                         baseContext,
-                        "User does not exist!!!",
+                        "Bunday foydalanuvchi mavjud emas!!!",
                         Toast.LENGTH_SHORT,
                     ).show()
                 }

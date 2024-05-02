@@ -48,7 +48,7 @@ class RegisterActivity : AppCompatActivity() {
                     val ism = edtFirstName.text.toString()
                     val familiya = edtLastName.text.toString()
                     val parol = edtPassword.text.toString()
-                    val tel = edtPhoneNumber.text.toString()
+                    val tel = "+998${edtPhoneNumber.text}"
                     val email = edtEmailAddress.text.toString()
                     val master = mastersList[spinner.selectedItemPosition]
 
@@ -73,7 +73,7 @@ class RegisterActivity : AppCompatActivity() {
                             } else {
                                 Toast.makeText(
                                     this@RegisterActivity,
-                                    "Authentication failed",
+                                    "Authentication failed!!!",
                                     Toast.LENGTH_SHORT
                                 )
                                     .show()
