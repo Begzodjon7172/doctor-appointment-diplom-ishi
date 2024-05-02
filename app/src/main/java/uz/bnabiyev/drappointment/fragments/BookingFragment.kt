@@ -1,7 +1,6 @@
 package uz.bnabiyev.drappointment.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,13 +15,11 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import uz.bnabiyev.drappointment.R
-import uz.bnabiyev.drappointment.adapters.TimeAdapter
 import uz.bnabiyev.drappointment.databinding.FragmentBookingBinding
 import uz.bnabiyev.drappointment.models.Booking
 import uz.bnabiyev.drappointment.models.Doctor
 import uz.bnabiyev.drappointment.models.User
 import uz.bnabiyev.drappointment.utils.TimeGenerator
-import java.text.SimpleDateFormat
 import java.util.Calendar
 
 private const val ARG_PARAM1 = "doctor"
@@ -129,7 +126,14 @@ class BookingFragment : Fragment() {
                                     }
                                 }
                             }
-                            arrayAdapter.notifyDataSetChanged()
+//                            arrayAdapter.setNotifyOnChange(true)
+//                            arrayAdapter.notifyDataSetChanged()
+                            arrayAdapter = ArrayAdapter(
+                                requireContext(),
+                                android.R.layout.simple_list_item_1,
+                                timeList
+                            )
+                            binding.spinner.adapter = arrayAdapter
                         }
 
                         override fun onCancelled(error: DatabaseError) {
@@ -188,6 +192,7 @@ class BookingFragment : Fragment() {
                 .setValue(booking)
 
             setDate(day, month, year)
+            onResume()
 
         }
 
@@ -217,7 +222,14 @@ class BookingFragment : Fragment() {
                                 }
                             }
                         }
-                        arrayAdapter.notifyDataSetChanged()
+//                        arrayAdapter.setNotifyOnChange(true)
+//                        arrayAdapter.notifyDataSetChanged()
+                        arrayAdapter = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_list_item_1,
+                            timeList
+                        )
+                        binding.spinner.adapter = arrayAdapter
                     }
 
                     override fun onCancelled(error: DatabaseError) {
