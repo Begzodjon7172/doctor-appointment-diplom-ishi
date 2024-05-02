@@ -184,8 +184,8 @@ class BookingFragment : Fragment() {
 
             FirebaseDatabase.getInstance().reference.child(param1?.uid!!).push()
                 .setValue(userUid).addOnSuccessListener {
-                    Toast.makeText(requireContext(), "emailgayam saqlandi", Toast.LENGTH_SHORT)
-                        .show()
+//                    Toast.makeText(requireContext(), "emailgayam saqlandi", Toast.LENGTH_SHORT)
+//                        .show()
                 }
 
             FirebaseDatabase.getInstance().reference.child("booking").child(doctorUid!!).push()
