@@ -115,6 +115,25 @@ class DoctorAppointmentListFragment : Fragment() {
                         }
                     })
 
+                reference.child("booking").child(doctorUid!!)
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (i in snapshot.children){
+                                val booking3 = i.getValue(Booking::class.java)
+                                if (booking3?.date == booking.date && booking3?.time == booking.time) {
+                                    reference.child("booking")
+                                        .child(doctorUid).child(i.key!!).removeValue()
+                                }
+
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+
+                        }
+
+                    })
+
 
                 alertDialog.dismiss()
 
