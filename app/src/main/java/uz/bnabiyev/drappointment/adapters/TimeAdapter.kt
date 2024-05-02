@@ -1,5 +1,6 @@
 package uz.bnabiyev.drappointment.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +15,7 @@ class TimeAdapter(val list: ArrayList<String>, private val itemClick: (String) -
             itemTimeBinding.tvTime.text = time
             itemView.setOnClickListener {
                 itemClick.invoke(time)
+                it.setBackgroundColor(Color.BLUE)
             }
         }
     }

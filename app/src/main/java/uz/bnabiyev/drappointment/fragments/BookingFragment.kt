@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import uz.bnabiyev.drappointment.R
+import uz.bnabiyev.drappointment.adapters.TimeAdapter
 import uz.bnabiyev.drappointment.databinding.FragmentBookingBinding
 import uz.bnabiyev.drappointment.models.Booking
 import uz.bnabiyev.drappointment.models.Doctor
@@ -50,6 +51,10 @@ class BookingFragment : Fragment() {
     var userRoom: String? = null
     private var date1 = ""
     private var time = ""
+    private val c = Calendar.getInstance()
+    private val day = c.get(Calendar.DAY_OF_MONTH)
+    private val month = c.get(Calendar.MONTH) + 1
+    private val year = c.get(Calendar.YEAR)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,14 +66,36 @@ class BookingFragment : Fragment() {
 
         val doctorUid = param1?.uid
         val userUid = FirebaseAuth.getInstance().currentUser?.uid
-        val c = Calendar.getInstance()
-        val day = c.get(Calendar.DAY_OF_MONTH)
-        val month = c.get(Calendar.MONTH) + 1
-        val year = c.get(Calendar.YEAR)
+
 
         date1 = "$day/${month + 1}/$year"
 
-        getDate()
+        timeList = TimeGenerator.generateTimes()
+
+        try {
+            reference.child("booking").child(doctorUid!!)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (i in snapshot.children) {
+                            val booking = i.getValue(Booking::class.java)
+                            if (booking != null) {
+                                if (booking.date == date1) {
+                                    timeList.remove(booking.time)
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+
+                    }
+
+                })
+        } catch (_: Exception) {
+
+        }
+
+
 
         arrayAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, timeList)
         binding.spinner.adapter = arrayAdapter
@@ -88,6 +115,30 @@ class BookingFragment : Fragment() {
 
         binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
             date1 = "$dayOfMonth/${month + 1}/$year"
+            timeList = TimeGenerator.generateTimes()
+
+            try {
+                reference.child("booking").child(doctorUid!!)
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (i in snapshot.children) {
+                                val booking = i.getValue(Booking::class.java)
+                                if (booking != null) {
+                                    if (booking.date == date1) {
+                                        timeList.remove(booking.time)
+                                    }
+                                }
+                            }
+                            arrayAdapter.notifyDataSetChanged()
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+
+                        }
+
+                    })
+            } catch (_: Exception) {
+            }
         }
 
         binding.listBtn.setOnClickListener {
@@ -133,35 +184,49 @@ class BookingFragment : Fragment() {
                         .show()
                 }
 
+            FirebaseDatabase.getInstance().reference.child("booking").child(doctorUid!!).push()
+                .setValue(booking)
+
+            setDate(day, month, year)
+
         }
 
         return binding.root
     }
 
-//    private fun getUserData() {
-//        reference.child("Users").child(userUid!!)
-//            .addListenerForSingleValueEvent(object : ValueEventListener {
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    mUser = snapshot.getValue(User::class.java)!!
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {
-//
-//                }
-//
-//            })
-//    }
 
-    fun getDate() {
-        timeList = TimeGenerator.generateTimes()
+    fun setDate(day: Int, month: Int, year: Int) {
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month - 1)
+        calendar.set(Calendar.DAY_OF_MONTH, day)
+        val millis = calendar.timeInMillis
+        binding.calendarView.date = millis
     }
 
-//    fun setDate(day: Int, month: Int, year: Int) {
-//        calendar.set(Calendar.YEAR, year)
-//        calendar.set(Calendar.MONTH, month - 1)
-//        calendar.set(Calendar.DAY_OF_MONTH, day)
-//        var millis = calendar.timeInMillis
-//        binding.calendarView.date = millis
-//    }
+    override fun onResume() {
+        super.onResume()
+        try {
+            reference.child("booking").child(param1?.uid!!)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (i in snapshot.children) {
+                            val booking = i.getValue(Booking::class.java)
+                            if (booking != null) {
+                                if (booking.date == date1) {
+                                    timeList.remove(booking.time)
+                                }
+                            }
+                        }
+                        arrayAdapter.notifyDataSetChanged()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+
+                    }
+
+                })
+        } catch (_: Exception) {
+        }
+    }
 
 }
