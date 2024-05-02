@@ -1,6 +1,8 @@
 package uz.bnabiyev.drappointment.fragments
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -9,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -65,21 +69,47 @@ class DoctorHomeFragment : Fragment() {
                 }
 
                 callBtn.setOnClickListener {
-                    val intent = Intent(Intent.ACTION_CALL);
-                    intent.data = Uri.parse("tel:${user.phoneNumber}")
-                    startActivity(intent)
-                    alertDialog.dismiss()
+
+                    // Ruxsat bor yo'qligini tekshiradi
+                    if (ContextCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.CALL_PHONE
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        val intent = Intent(Intent.ACTION_CALL);
+                        intent.data = Uri.parse("tel:${user.phoneNumber}")
+                        startActivity(intent)
+                        alertDialog.dismiss()
+                    } else {
+                        // Dialog chiqaradi
+                        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.CALL_PHONE), 1)
+                        alertDialog.dismiss()
+                    }
                 }
 
+
                 smsBtn.setOnClickListener {
-                    val bundle = Bundle()
-                    bundle.putString("name", user.firstName)
-                    bundle.putString("number", user.phoneNumber)
-                    findNavController().navigate(
-                        R.id.sendMessageFragment2,
-                        bundle
-                    )
-                    alertDialog.dismiss()
+
+                    // Ruxsat bor yo'qligini tekshiradi
+                    if (ContextCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.SEND_SMS
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        val bundle = Bundle()
+                        bundle.putString("name", user.firstName)
+                        bundle.putString("number", user.phoneNumber)
+                        findNavController().navigate(
+                            R.id.sendMessageFragment2,
+                            bundle
+                        )
+                        alertDialog.dismiss()
+                    } else {
+                        // Dialog chiqaradi
+                        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.SEND_SMS), 1)
+                        alertDialog.dismiss()
+                    }
+
                 }
 
                 chatBtn.setOnClickListener {
