@@ -128,12 +128,15 @@ class BookingFragment : Fragment() {
                             }
 //                            arrayAdapter.setNotifyOnChange(true)
 //                            arrayAdapter.notifyDataSetChanged()
-                            arrayAdapter = ArrayAdapter(
-                                requireContext(),
-                                android.R.layout.simple_list_item_1,
-                                timeList
-                            )
-                            binding.spinner.adapter = arrayAdapter
+                            try {
+                                arrayAdapter = ArrayAdapter(
+                                    context!!,
+                                    android.R.layout.simple_list_item_1,
+                                    timeList
+                                )
+                                binding.spinner.adapter = arrayAdapter
+                            } catch (_: Exception) {
+                            }
                         }
 
                         override fun onCancelled(error: DatabaseError) {
@@ -182,6 +185,7 @@ class BookingFragment : Fragment() {
                     Toast.makeText(requireContext(), "Saqlandi!!!", Toast.LENGTH_SHORT).show()
                 }
 
+
             FirebaseDatabase.getInstance().reference.child(param1?.uid!!).push()
                 .setValue(userUid).addOnSuccessListener {
 //                    Toast.makeText(requireContext(), "emailgayam saqlandi", Toast.LENGTH_SHORT)
@@ -224,12 +228,15 @@ class BookingFragment : Fragment() {
                         }
 //                        arrayAdapter.setNotifyOnChange(true)
 //                        arrayAdapter.notifyDataSetChanged()
-                        arrayAdapter = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            timeList
-                        )
-                        binding.spinner.adapter = arrayAdapter
+                        try {
+                            arrayAdapter = ArrayAdapter(
+                                context!!,
+                                android.R.layout.simple_list_item_1,
+                                timeList
+                            )
+                            binding.spinner.adapter = arrayAdapter
+                        } catch (_: Exception) {
+                        }
                     }
 
                     override fun onCancelled(error: DatabaseError) {
