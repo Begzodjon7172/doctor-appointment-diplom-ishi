@@ -60,15 +60,16 @@ class RegisterActivity : AppCompatActivity() {
                                     val doctor =
                                         Doctor(ism, familiya, email, tel, parol, master, uid)
                                     reference.child("Doctors").child(uid!!).setValue(doctor)
+                                    val intent = Intent(this@RegisterActivity, DoctorMainActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
                                 } else {
                                     val user = User(ism, familiya, email, tel, parol, uid)
                                     reference.child("Users").child(uid!!).setValue(user)
+                                    val intent = Intent(this@RegisterActivity, MainActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
                                 }
-
-
-                                val intent = Intent(this@RegisterActivity, MainActivity::class.java)
-                                startActivity(intent)
-                                finish()
 
                             } else {
                                 Toast.makeText(
