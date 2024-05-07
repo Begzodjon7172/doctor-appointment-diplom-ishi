@@ -3,28 +3,21 @@ package uz.bnabiyev.drappointment.fragments
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import uz.bnabiyev.drappointment.R
 import uz.bnabiyev.drappointment.adapters.BookingAdapter
 import uz.bnabiyev.drappointment.databinding.CustomAlertDialogBinding
 import uz.bnabiyev.drappointment.databinding.FragmentAppointmentListBinding
-import uz.bnabiyev.drappointment.databinding.UserDialogBinding
 import uz.bnabiyev.drappointment.models.Booking
-import uz.bnabiyev.drappointment.models.Doctor
 import uz.bnabiyev.drappointment.models.User
 
 private const val ARG_PARAM1 = "user"

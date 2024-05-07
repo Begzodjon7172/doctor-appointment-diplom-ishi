@@ -26,6 +26,7 @@ import uz.bnabiyev.drappointment.R
 import uz.bnabiyev.drappointment.adapters.UserAdapter
 import uz.bnabiyev.drappointment.databinding.FragmentDoctorHomeBinding
 import uz.bnabiyev.drappointment.databinding.UserDialogBinding
+import uz.bnabiyev.drappointment.models.Booking
 import uz.bnabiyev.drappointment.models.User
 
 class DoctorHomeFragment : Fragment() {
@@ -156,6 +157,23 @@ class DoctorHomeFragment : Fragment() {
                                     }
                                 }
                                 onResume()
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+
+                            }
+                        })
+
+                    reference.child("booking").child(auth.currentUser?.uid!!)
+                        .addValueEventListener(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                for (i in snapshot.children) {
+                                    val booking = i.getValue(Booking::class.java)
+                                    if (booking?.userUid == user.uid) {
+                                        reference.child("booking").child(auth.currentUser?.uid!!).child(i.key!!)
+                                            .removeValue()
+                                    }
+                                }
                             }
 
                             override fun onCancelled(error: DatabaseError) {
