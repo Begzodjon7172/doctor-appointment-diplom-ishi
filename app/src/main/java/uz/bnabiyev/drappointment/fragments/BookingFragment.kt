@@ -1,5 +1,6 @@
 package uz.bnabiyev.drappointment.fragments
 
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -178,23 +179,25 @@ class BookingFragment : Fragment() {
                     param1?.firstName
                 )
 
-            reference.child("appointments").child(userRoom!!).child("messages").push()
-                .setValue(booking).addOnSuccessListener {
-                    reference.child("appointments").child(doctorRoom!!).child("messages").push()
-                        .setValue(booking)
-                    Toast.makeText(requireContext(), "Saqlandi!!!", Toast.LENGTH_SHORT).show()
-                }
-
-
-            FirebaseDatabase.getInstance().reference.child(param1?.uid!!).push()
-                .setValue(userUid).addOnSuccessListener {
-//                    Toast.makeText(requireContext(), "emailgayam saqlandi", Toast.LENGTH_SHORT)
-//                        .show()
-                }
-
-            FirebaseDatabase.getInstance().reference.child("booking").child(doctorUid!!).push()
-                .setValue(booking)
-
+//            reference.child("appointments").child(userRoom!!).child("messages").push()
+//                .setValue(booking).addOnSuccessListener {
+//                    reference.child("appointments").child(doctorRoom!!).child("messages").push()
+//                        .setValue(booking)
+//                    Toast.makeText(requireContext(), "Saqlandi!!!", Toast.LENGTH_SHORT).show()
+//                }
+//
+//
+//            FirebaseDatabase.getInstance().reference.child(param1?.uid!!).push()
+//                .setValue(userUid).addOnSuccessListener {
+////                    Toast.makeText(requireContext(), "emailgayam saqlandi", Toast.LENGTH_SHORT)
+////                        .show()
+//                }
+//
+//            FirebaseDatabase.getInstance().reference.child("booking").child(doctorUid!!).push()
+//                .setValue(booking)
+//
+            MyAsync1().execute(booking)
+            MyAsync2().execute(booking)
             setDate(day, month, year)
             onResume()
 
@@ -203,6 +206,35 @@ class BookingFragment : Fragment() {
         return binding.root
     }
 
+    inner class MyAsync1 : AsyncTask<Booking, Void, Void>() {
+        override fun doInBackground(vararg params: Booking?): Void? {
+            reference.child("appointments").child(userRoom!!).child("messages").push()
+                .setValue(params[0]).addOnSuccessListener {
+                    reference.child("appointments").child(doctorRoom!!).child("messages").push()
+                        .setValue(params[0])
+                    Toast.makeText(requireContext(), "Saqlandi!!!", Toast.LENGTH_SHORT).show()
+                }
+            return null
+        }
+
+
+    }
+
+    inner class MyAsync2 : AsyncTask<Booking, Void, Void>() {
+        override fun doInBackground(vararg params: Booking?): Void? {
+            FirebaseDatabase.getInstance().reference.child(param1?.uid!!).push()
+                .setValue(FirebaseAuth.getInstance().currentUser?.uid).addOnSuccessListener {
+//                    Toast.makeText(requireContext(), "emailgayam saqlandi", Toast.LENGTH_SHORT)
+//                        .show()
+                }
+
+            FirebaseDatabase.getInstance().reference.child("booking").child(param1?.uid!!).push()
+                .setValue(params[0])
+            return null
+        }
+
+
+    }
 
     fun setDate(day: Int, month: Int, year: Int) {
         calendar.set(Calendar.YEAR, year)
